@@ -5,10 +5,11 @@
 package jogodaforca;
 
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author ALUNO
+ * @author KENZO
  */
 public class JogoDaForca {
 
@@ -17,42 +18,32 @@ public class JogoDaForca {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Informe a palavra secreta para iniciarmos o jogo!");
-        String secretWord = sc.nextLine();
+        String secretWord = JOptionPane.showInputDialog(null, "Informe a palavra secreta", "Palavra Secreta", 3).toLowerCase();
         int qtdLetras = secretWord.length();
-        
-        String interfaceWord = "_";
-        for(int i = 1; i<qtdLetras; i++){
-            interfaceWord += "_";
+        int qtdVidas = 7;
+        String chute = "";
+        String interfaceWord = "";
+        for(int i = 0; i<qtdLetras; i++){
+            interfaceWord += "*";
         }
         
         StringBuilder sb = new StringBuilder(interfaceWord);
-        
-        int qtdVidas = 7;
-        // int index = 0;
-        char posicao = ' ';
-        String chute = "";
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+         
         System.out.println("Certo! Caro jogador, o jogo funcionará da seguinte maneira: ");
         System.out.println("Você deve descobrir a palavra secreta. Para isso, você pode chutar a palavra ou chutar uma letra.");
         System.out.println("Caso você acerte a palavra, o jogo termina, caso acertar a letra, a palavra secreta será preenchida com ela.");
         System.out.println("Caso a palavra esteja incorreta, ou a letra informada não esteja presente na palavra, você perde 1 das 7 vidas que possui.");
         System.out.println("Portanto, chute com cuidado e inteligência, divirta-se!!!");
-        
-        while(qtdVidas != 0){
+        //qtdVidas != 0 || 
+        while(qtdVidas != 0 && !secretWord.equals(sb.toString())){
             System.out.println("Digite uma letra ou informe a palavra");
             chute = sc.nextLine();
             if(chute.length() == 1){
-                //System.out.println(secretWord.matches(".*"+chute+".*"));
                 if(secretWord.matches(".*"+chute+".*")){
                     System.out.println("Você acertou uma letra!");
-                    /*index = secretWord.indexOf(chute);
-                    // posicao = interfaceWord.charAt(index);
-                    
-                    sb.setCharAt(index, chute.charAt(0));
-                    interfaceWord = sb.toString();
-                    System.out.println(interfaceWord);*/
-                    MostraPalavra(chute, secretWord, interfaceWord, sb);
+                    //sb = MontaPalavra(chute, secretWord, sb);
+                    MontaPalavra(chute, secretWord, sb);
+                    System.out.println(sb.toString());
                 }
                 else {
                     qtdVidas--;
@@ -61,8 +52,6 @@ public class JogoDaForca {
             }
             else if(chute.length() > 1){
                 if(chute.equals(secretWord)){
-                    System.out.println("Parabéns, você acertou a palavra!!!");
-                    System.out.println("Fim de jogo!!!");
                     break;
                 }
                 else{
@@ -71,18 +60,44 @@ public class JogoDaForca {
                 }
             }
         }
+        
         if(qtdVidas == 0)
             System.out.println("Game Over!");
+        else{
+            System.out.println("Parabéns, você acertou a palavra!!!");
+            System.out.println("Fim de jogo!!!");
+        }
     }
     
-    static void MostraPalavra(String chute, String secretWord, String interfaceWord, StringBuilder sb){
-        //StringBuilder sb = new StringBuilder(interfaceWord);
-        
-        int index = secretWord.indexOf(chute);
-                    // posicao = interfaceWord.charAt(index);
-                    
-        sb.setCharAt(index, chute.charAt(0));
-        interfaceWord = sb.toString();
-        System.out.println(interfaceWord);
+    static void MontaPalavra(String chute, String secretWord, StringBuilder sb){
+        char chuteLetra = chute.charAt(0);
+        char letra;
+        for(int i=0; i<secretWord.length(); i++){ //percorre a String para encontrar todas as ocorrências do valor de entrada
+            letra = secretWord.charAt(i);
+            if(letra == chuteLetra){
+                sb.setCharAt(i, chute.charAt(0));
+                //interfaceWord = sb.toString();
+                
+            }
+        }
     }
+    /*static StringBuilder MontaPalavra(String chute, String secretWord, StringBuilder sb){
+        char chuteLetra = chute.charAt(0);
+        char letra;
+        for(int i=0; i<secretWord.length(); i++){ //percorre a String para encontrar todas as ocorrências do valor de entrada
+            letra = secretWord.charAt(i);
+            if(letra == chuteLetra){
+                sb.setCharAt(i, chute.charAt(0));
+                //interfaceWord = sb.toString();
+                
+            }
+        }
+        return sb;
+    }*/
 }
+
+
+//Algorítmo de inserção da letra:
+// percore a String secretWord, a cada índice obter o char e compará-lo com o valor de entrada
+// se for igual, pega o indice correspondente e e insere o valor de entrada no respectivo indice da string interfaceWord
+//repetir processo até o fim da String secretWord
